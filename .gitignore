@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 spring-boot-reference.pdf
+一些工作.md
 
 ### STS ###
 .apt_generated
