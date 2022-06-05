@@ -40,7 +40,9 @@ public class QuestionService {
         page = paginationDTO.getPage();
         Integer offset = size * (page - 1);
         PageHelper.offsetPage(offset, size);
-        List<Question> questions = questionMapper.selectByExample(new QuestionExample());
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause(" id DESC");
+        List<Question> questions = questionMapper.selectByExample(questionExample);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
@@ -109,6 +111,9 @@ public class QuestionService {
             // 创建问题
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.insert(question);
         } else {
             // 更新问题

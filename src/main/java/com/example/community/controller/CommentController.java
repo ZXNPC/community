@@ -1,19 +1,16 @@
 package com.example.community.controller;
 
-import com.example.community.dto.CommentDTO;
+import com.example.community.dto.CommentCreateDTO;
 import com.example.community.dto.ResultDTO;
 import com.example.community.enums.CustomizeErrorCode;
-import com.example.community.mapper.CommentMapper;
 import com.example.community.model.Comment;
 import com.example.community.model.User;
 import com.example.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 @Controller
 public class CommentController {
@@ -22,7 +19,7 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentDTO,
                        HttpServletRequest request) {
 
         User user = (User) request.getSession().getAttribute("user");
@@ -37,7 +34,7 @@ public class CommentController {
         comment.setCommentator(user.getId());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
-        comment.setCommentator(27L);
+        comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
         commentService.insert(comment);
 
