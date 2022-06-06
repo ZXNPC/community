@@ -1,5 +1,7 @@
 package com.example.community.controller;
 
+import com.example.community.enums.CustomizeErrorCode;
+import com.example.community.exception.CustomizeException;
 import com.example.community.service.QuestionService;
 import com.example.community.dto.QuestionDTO;
 import com.example.community.model.Question;
@@ -37,6 +39,7 @@ public class PublishController {
             HttpServletRequest request,
             Model model
     ) {
+
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
@@ -73,8 +76,13 @@ public class PublishController {
 
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Long id,
+                       HttpServletRequest request,
                        Model model) {
         QuestionDTO question = questionService.getById(id);
+
+        if (question.getUser().getId() != ((User) request.getSession().getAttribute("user")).getId()) {
+            throw new CustomizeException(CustomizeErrorCode.ACCOUNT_ERROR);
+        }
 
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());

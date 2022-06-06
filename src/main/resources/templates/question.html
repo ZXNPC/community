@@ -62,23 +62,26 @@
                 </div>
             </div>
 
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="media col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-rounded"
-                             th:src="${session.user.avatarUrl}">
-                    </a>
+            <div th:if="${session.user != null}">
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="media col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded"
+                                 th:src="${session.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <span th:if="${session.user != null}" th:text="${session.user.name}"></span>
+                        </h4>
+                    </div>
+                    <input type="hidden" id="question_id" th:value="${question.id}">
+                    <textarea class="form-control comment" rows="6" id="comment_content" th:text="${content}"></textarea>
+                    <button type="button" class="btn btn-success btn-comment" onclick="post()">回复</button>
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading">
-                        <span th:text="${session.user.name}"></span>
-                    </h4>
-                </div>
-                <input type="hidden" id="question_id" th:value="${question.id}">
-                <textarea class="form-control comment" rows="6" id="comment_content" th:text="${content}"></textarea>
-                <button type="button" class="btn btn-success btn-comment" onclick="post()">回复</button>
             </div>
+
 
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">

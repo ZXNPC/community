@@ -72,6 +72,7 @@ public class QuestionService {
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
+        questionExample.setOrderByClause(" id DESC");
         PageHelper.offsetPage(offset, size);
         List<Question> questions = questionMapper.selectByExample(questionExample);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
