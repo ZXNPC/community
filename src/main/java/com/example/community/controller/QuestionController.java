@@ -1,7 +1,7 @@
 package com.example.community.controller;
 
-import com.example.community.dto.CommentCreateDTO;
 import com.example.community.dto.CommentDTO;
+import com.example.community.enums.CommentTypeEnum;
 import com.example.community.service.CommentService;
 import com.example.community.service.QuestionService;
 import com.example.community.dto.QuestionDTO;
@@ -26,7 +26,7 @@ public class QuestionController {
                            Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
 
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
 
         questionService.incView(id);
         model.addAttribute("question", questionDTO);

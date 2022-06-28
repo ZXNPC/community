@@ -41,7 +41,7 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         PageHelper.offsetPage(offset, size);
         QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause(" id DESC");
+        questionExample.setOrderByClause(" gmt_create DESC");
         List<Question> questions = questionMapper.selectByExample(questionExample);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class QuestionService {
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
-        questionExample.setOrderByClause(" id DESC");
+        questionExample.setOrderByClause(" gmt_create DESC");
         PageHelper.offsetPage(offset, size);
         List<Question> questions = questionMapper.selectByExample(questionExample);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
