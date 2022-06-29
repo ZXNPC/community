@@ -4,7 +4,7 @@ body {
 
 .main {
     background-color: white;
-    margin: 30px;
+    margin: 0px 30px 30px 30px;
 }
 
 .btn-publish {
@@ -20,6 +20,21 @@ body {
 .question .media-object {
     width: 45px;
     height: 45px;
+}
+
+.tag-list {
+    margin-top: 7px;
+}
+
+.question-tag {
+    margin-top: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    white-space: inherit;
+}
+
+.nav-tag {
+    margin-top: 7px;
 }
 
 .media-body {
@@ -105,4 +120,11 @@ body {
     margin-bottom: 15px;
     border-bottom: 1px solid #EEEEEE;
     padding: 5px;
+}
+
+.question-related {
+    line-height: 20px;
+    font-size: 16px;
+    list-style: none;
+    padding-left: 0;
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface QuestionExtMapper {
     int incView(@Param("row") Question row);
     int incComment(@Param("row") Question row);
+    List<Question> selectRelated(Question question);
 }

@@ -1,11 +1,13 @@
 package com.example.community.controller;
 
+import com.example.community.cache.TagCache;
 import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
 import com.example.community.service.QuestionService;
 import com.example.community.dto.QuestionDTO;
 import com.example.community.model.Question;
 import com.example.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +28,8 @@ public class PublishController {
     QuestionService questionService;
     
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tagDTOS", new TagCache().get());
         return "publish";
     }
 
@@ -39,10 +42,10 @@ public class PublishController {
             HttpServletRequest request,
             Model model
     ) {
-
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        model.addAttribute("tagDTOS", TagCache.get());
 
         if(title == null || title == "") {
             model.addAttribute("error", "标题不能为空");
@@ -56,6 +59,14 @@ public class PublishController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
+
+
+        String cs = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(cs)) {
+            model.addAttribute("error", "标签错误 " + cs);
+            return "publish";
+        }
+
 
         User user = (User) request.getSession().getAttribute("user");
         if(user == null) {
@@ -88,6 +99,7 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", question.getId());
+        model.addAttribute("tagDTOS", new TagCache().get());
 
         return "publish";
     }

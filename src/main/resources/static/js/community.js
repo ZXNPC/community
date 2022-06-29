@@ -109,3 +109,22 @@ function collapseComments(e) {
         }
     }
 }
+
+// 展示selectTag
+function showSelectTag() {
+    $("#select-tag").show();
+}
+
+// 插入tag
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (!previous.split(',').includes(value)) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        }
+        else {
+            $("#tag").val(value);
+        }
+    }
+}
