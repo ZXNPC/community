@@ -46,7 +46,7 @@ public class NotificationService {
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria()
                 .andReceiverEqualTo(userId);
-        notificationExample.setOrderByClause(" gmt_create desc");
+        notificationExample.setOrderByClause(" status desc, gmt_create desc");
         List<Notification> notifications = notificationMapper.selectByExample(notificationExample);
         List<NotificationDTO> notificationDTOList = new ArrayList<>();
 
