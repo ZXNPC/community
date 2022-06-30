@@ -11,7 +11,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     TYPE_PARAM_WRONG(2005, "评论类型错误或不存在"),
     COMMENT_NOT_FOUND(2006, "回复的评论不存在"),
     ACCOUNT_ERROR(2007, "当前登录用户错误"),
-    CONTENT_IS_EMPTY(2008, "评论为空");
+    CONTENT_IS_EMPTY(2008, "评论为空"),
+    READ_NOTIFICATION_FAIL(2009, "提示出错"),
+    NOTIFICATION_NOT_FOUND(2010, "提示不存在");
 
     @Override
     public String getMessage() {
