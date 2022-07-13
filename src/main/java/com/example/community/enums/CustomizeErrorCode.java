@@ -13,7 +13,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     ACCOUNT_ERROR(2007, "当前登录用户错误"),
     CONTENT_IS_EMPTY(2008, "评论为空"),
     READ_NOTIFICATION_FAIL(2009, "提示出错"),
-    NOTIFICATION_NOT_FOUND(2010, "提示不存在");
+    NOTIFICATION_NOT_FOUND(2010, "提示不存在"),
+    FILE_UPLOAD_FAIL(2011, "文件上传错误");
 
     @Override
     public String getMessage() {
