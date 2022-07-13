@@ -6,6 +6,7 @@ target/
 spring-boot-reference.pdf
 一些工作.md
 一些工作.pdf
+src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
