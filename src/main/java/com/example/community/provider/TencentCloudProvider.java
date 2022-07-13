@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,6 +44,11 @@ public class TencentCloudProvider {
 
     @Value("${cloud.tencent.cos.bucket.region}")
     private String region;
+
+    @Value("${cloud.tencent.cos.bucket.expires}")
+    private Integer expires;
+
+
 
     private COSClient createCOSClient() {
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
@@ -107,29 +110,11 @@ public class TencentCloudProvider {
         }
         shutdownTransferManager(transferManager);
 
-        Date expirationDate = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+        Date expirationDate = new Date(System.currentTimeMillis() + expires);
         HttpMethodName method = HttpMethodName.GET;
 
         URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, method);
 
         return url.toString();
-    }
-
-    public URL getObjectUrl(String key) {
-        COSClient cosClient = createCOSClient();
-
-        Date expirationDate = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000 * 365 * 10);
-
-        Map<String, String> params = new HashMap<String, String>();
-
-        Map<String, String> headers = new HashMap<String, String>();
-
-        HttpMethodName method = HttpMethodName.GET;
-
-        URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, method, headers, params);
-
-        cosClient.shutdown();
-
-        return url;
     }
 }

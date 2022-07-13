@@ -2,6 +2,7 @@ package com.example.community.service;
 
 import com.example.community.dto.PaginationDTO;
 import com.example.community.dto.QuestionDTO;
+import com.example.community.dto.QuestionQueryDTO;
 import com.example.community.enums.CustomizeErrorCode;
 import com.example.community.exception.CustomizeException;
 import com.example.community.mapper.QuestionExtMapper;
@@ -33,67 +34,6 @@ public class QuestionService {
 
     @Autowired
     private UserMapper userMapper;
-
-    public PaginationDTO list(Integer page, Integer size) {
-
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
-        PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setPagination(totalCount, page, size);
-
-        page = paginationDTO.getPage();
-        Integer offset = size * (page - 1);
-        PageHelper.offsetPage(offset, size);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause(" gmt_create DESC");
-        List<Question> questions = questionMapper.selectByExample(questionExample);
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-
-        for (Question question : questions) {
-            UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdEqualTo(question.getCreator());
-            List<User> users = userMapper.selectByExample(userExample);
-            User user = users.get(0);
-            QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
-            questionDTO.setUser(user);
-            questionDTOList.add(questionDTO);
-        }
-        paginationDTO.setData(questionDTOList);
-
-        return paginationDTO;
-    }
-
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
-        QuestionExample example = new QuestionExample();
-        example.createCriteria().andCreatorEqualTo(userId);
-        Integer totalCount = (int) questionMapper.countByExample(example);
-        PaginationDTO paginationDTO = new PaginationDTO<Question>();
-        paginationDTO.setPagination(totalCount, page, size);
-
-        page = paginationDTO.getPage();
-        Integer offset = size * (page - 1);
-
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.createCriteria().andCreatorEqualTo(userId);
-        questionExample.setOrderByClause(" gmt_create DESC");
-        PageHelper.offsetPage(offset, size);
-        List<Question> questions = questionMapper.selectByExample(questionExample);
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-
-        for (Question question : questions) {
-            UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdEqualTo(question.getCreator());
-            List<User> users = userMapper.selectByExample(userExample);
-            User user = users.get(0);
-            QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
-            questionDTO.setUser(user);
-            questionDTOList.add(questionDTO);
-        }
-        paginationDTO.setData(questionDTOList);
-
-        return paginationDTO;
-    }
 
     public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
@@ -155,5 +95,77 @@ public class QuestionService {
             return questionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
+    }
+
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(example);
+        PaginationDTO paginationDTO = new PaginationDTO<Question>();
+        paginationDTO.setPagination(totalCount, page, size);
+
+        page = paginationDTO.getPage();
+        Integer offset = size * (page - 1);
+
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(userId);
+        questionExample.setOrderByClause(" gmt_create DESC");
+        PageHelper.offsetPage(offset, size);
+        List<Question> questions = questionMapper.selectByExample(questionExample);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+
+        for (Question question : questions) {
+            UserExample userExample = new UserExample();
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
+            List<User> users = userMapper.selectByExample(userExample);
+            User user = users.get(0);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        paginationDTO.setData(questionDTOList);
+
+        return paginationDTO;
+    }
+
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = search.split(" ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+        else {
+            search = null;
+        }
+
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setPagination(totalCount, page, size);
+
+        page = paginationDTO.getPage();
+        Integer offset = size * (page - 1);
+        PageHelper.offsetPage(offset, size);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause(" gmt_create DESC");
+        questionQueryDTO.setPage(page);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+
+        for (Question question : questions) {
+            UserExample userExample = new UserExample();
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
+            List<User> users = userMapper.selectByExample(userExample);
+            User user = users.get(0);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        paginationDTO.setData(questionDTOList);
+
+        return paginationDTO;
     }
 }
