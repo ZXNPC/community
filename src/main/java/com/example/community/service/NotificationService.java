@@ -12,6 +12,7 @@ import com.example.community.mapper.QuestionMapper;
 import com.example.community.mapper.UserMapper;
 import com.example.community.model.*;
 import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class NotificationService {
 
     @Autowired
@@ -69,10 +71,14 @@ public class NotificationService {
 
     public NotificationDTO read(Long id, User user) {
         Notification notification = notificationMapper.selectByPrimaryKey(id);
-        if (notification == null)
+        if (notification == null) {
+            log.error("notification not found, {}", id);
             throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
-        if (notification.getReceiver() != user.getId())
+        }
+        if (notification.getReceiver() != user.getId()) {
+            log.error("read notification fail, {}", notification);
             throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
+        }
 
         notification.setStatus(NotificationStatusEnum.READ.getStatus());
         notificationMapper.updateByPrimaryKey(notification);

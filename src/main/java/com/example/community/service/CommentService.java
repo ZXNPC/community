@@ -8,6 +8,7 @@ import com.example.community.enums.NotificationTypeEnum;
 import com.example.community.exception.CustomizeException;
 import com.example.community.mapper.*;
 import com.example.community.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CommentService {
     @Autowired
     private CommentMapper commentMapper;
@@ -39,10 +41,12 @@ public class CommentService {
     @Transactional
     public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
+            log.error("comment target not found, {}", comment);
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARENT_NOT_FOUND);
         }
 
         if (comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())) {
+            log.error("comment type param wrong, {}", comment);
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
 
@@ -50,11 +54,13 @@ public class CommentService {
             // 回复评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if (dbComment == null) {
+                log.error("comment not found, {}", comment);
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
 
             Question dbQuestion = questionMapper.selectByPrimaryKey(dbComment.getParentId());
             if (dbQuestion == null) {
+                log.error("comment parent question not found, {}", comment);
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
 
@@ -67,6 +73,7 @@ public class CommentService {
             // 回复问题
             Question dbQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (dbQuestion == null) {
+                log.error("comment parent question not found, {}", comment);
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
             commentMapper.insert(comment);

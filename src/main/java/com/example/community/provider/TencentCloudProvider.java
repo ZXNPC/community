@@ -17,6 +17,7 @@ import com.qcloud.cos.region.Region;
 import com.qcloud.cos.transfer.TransferManager;
 import com.qcloud.cos.transfer.TransferManagerConfiguration;
 import com.qcloud.cos.transfer.Upload;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
+@Slf4j
 public class TencentCloudProvider {
 
     @Value("${cloud.tencent.cam.capi.app-id}")
@@ -102,10 +104,13 @@ public class TencentCloudProvider {
             Upload upload = transferManager.upload(putObjectRequest);
             UploadResult uploadResult = upload.waitForUploadResult();
         } catch (CosServiceException e) {
+            log.error("file upload fail, {}", key);
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (CosClientException e) {
+            log.error("file upload fail, {}", key);
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (InterruptedException e) {
+            log.error("file upload fail, {}", key);
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
         shutdownTransferManager(transferManager);

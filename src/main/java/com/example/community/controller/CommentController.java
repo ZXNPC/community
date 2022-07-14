@@ -9,6 +9,7 @@ import com.example.community.exception.CustomizeException;
 import com.example.community.model.Comment;
 import com.example.community.model.User;
 import com.example.community.service.CommentService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class CommentController {
     @Autowired
     private CommentService commentService;

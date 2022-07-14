@@ -5,6 +5,7 @@ import com.example.community.dto.AccessTokenDTO;
 import com.example.community.dto.GithubUser;
 import com.example.community.model.User;
 import com.example.community.provider.GithubProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.UUID;
  * 20220320
  */
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -62,6 +64,7 @@ public class AuthorizeController {
             return "redirect:/";
         }
         else {
+            log.error("callback get github error, {}", githubUser);
             //登录失败，重新登录
             return "redirect:/";
         }

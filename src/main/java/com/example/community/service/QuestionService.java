@@ -13,6 +13,7 @@ import com.example.community.model.QuestionExample;
 import com.example.community.model.User;
 import com.example.community.model.UserExample;
 import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class QuestionService {
 
     @Autowired
@@ -38,6 +40,7 @@ public class QuestionService {
     public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
+            log.error("question not found, {}", id);
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         QuestionDTO questionDTO = new QuestionDTO();
@@ -66,6 +69,7 @@ public class QuestionService {
             questionExample.createCriteria().andIdEqualTo(question.getId());
             int updated = questionMapper.updateByExampleSelective(question, questionExample);
             if (updated != 1) {
+                log.error("update question not found, {}", question);
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
@@ -111,7 +115,7 @@ public class QuestionService {
         questionExample.createCriteria().andCreatorEqualTo(userId);
         questionExample.setOrderByClause(" gmt_create DESC");
         PageHelper.offsetPage(offset, size);
-        List<Question> questions = questionMapper.selectByExample(questionExample);
+        List<Question> questions = questionMapper.selectByExampleWithBLOBs(questionExample);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
