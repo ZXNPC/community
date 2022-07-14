@@ -10,10 +10,4 @@ import java.net.URL;
 
 @SpringBootTest
 class CommunityApplicationTests {
-	@Test
-	void test() throws MalformedURLException {
-		URL url = new URL("www");
-		System.out.printf(url.toString());
-	}
-
 }

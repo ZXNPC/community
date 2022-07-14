@@ -6,6 +6,7 @@ target/
 spring-boot-reference.pdf
 src/main/resources/application.properties
 logs/
+out/
 
 ### STS ###
 .apt_generated
