@@ -15,5 +15,9 @@ mybatis generator 生成脚本：
 ```bash
 mvn -Dmybatis'.generator.overwrite=true' mybatis-generator:generate
 ```
+服务器运行脚本：
+```bash
+java -jar -Dspring.profiles.active=production target/community-0.0.1-SNAPSHOT.jar
+```
 
 
